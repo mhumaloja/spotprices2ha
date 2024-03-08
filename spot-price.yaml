@@ -142,6 +142,23 @@ template:
       unique_id: shf_price_or_rank_acceptable
       device_class: power
       state: '{{ is_state("binary_sensor.shf_rank_acceptable", "on") or is_state("binary_sensor.shf_price_acceptable", "on") }}'
+  - binary_sensor:
+    - name: "SHF 2nd Rank acceptable"
+      unique_id: shf_rank_acceptable_2
+      device_class: power
+      availability: '{{ has_value("sensor.shf_rank_now") }}'
+      state: '{{ states("sensor.shf_rank_now")| int <= states("input_number.shf_rank_slider_2") | int }}'
+  - binary_sensor:
+    - name: "SHF 2nd Price acceptable"
+      unique_id: shf_price_acceptable_2
+      device_class: power
+      availability: '{{ has_value("sensor.shf_electricity_price_now") }}'
+      state: '{{ states("sensor.shf_electricity_price_now") | float <= states("input_number.shf_price_slider_2") | float }}'
+  - binary_sensor:
+    - name: "SHF 2nd Price or Rank acceptable"
+      unique_id: shf_price_or_rank_acceptable_2
+      device_class: power
+      state: '{{ is_state("binary_sensor.shf_rank_acceptable_2", "on") or is_state("binary_sensor.shf_price_acceptable_2", "on") }}'
 
 input_select:
   shf_control_function:
@@ -166,6 +183,19 @@ input_number:
     step: 1
   shf_price_slider:
     name: SHF Max Price allowed
+    min: 0
+    max: 4
+    step: 0.01
+    unit_of_measurement: €/kWh
+    icon: mdi:cash-lock
+    mode: box
+    shf_rank_slider_2:
+    name: SHF Max 2md Rank allowed
+    min: 1
+    max: 24
+    step: 1
+  shf_price_slider_2:
+    name: SHF Max 2nd Price allowed
     min: 0
     max: 4
     step: 0.01
